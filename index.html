@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rodo Interface</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="userRobo"> 
+        <button id="user">Robo Usuario </button>
+        <button id="adm">Robo Administrador</button>
+    </div>
+
+    <div class="login">
+        <h2>Login</h2>
+        <form action="/autenticar" method="post">
+          <div>
+            <label for="usuario">Usuário:</label>
+            <input type="text" id="usuario" name="usuario" required>
+          </div>
+          <div>
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
+          </div>
+          <button type="submit" id="logar">Entrar</button>
+        </form>
+
+        <br>
+        <button id="votlar">Voltar</button>
+    </div>
+
+    <ul id="robos">
+      <h2 class="robo">ROBO</h2> <label class="statusA">STATUS</label>
+      <li class="li-robo"> <button id="robo1"> jaFalcao</button> <label class="status">Desligado</label> </li> 
+      <li class="li-robo"> <button id="robo2"> IPmiranda</button> <label class="status">Desligado</label> </li>
+      <li class="li-robo"> <button id="robo3"> Schsiilva</button> <label class="status">Desligado</label> </li>
+      <li class="li-robo"> <button id="robo4"> Impereira</button> <label class="status">Desligado</label> </li>
+      <li class="li-robo"> <button id="robo5"> dhaboorba</button> <label class="status">Desligado</label> </li>
+    </ul>
+
+    <ul id="funcoes">
+      <h3 id="userSelect">Usuario</h3> <label id="removeUser">X</label>
+      <li class="li-funcoes"> <button id="edit"> Editar Robo </button> </li>
+      <li class="li-funcoes"> <button> Subir Base </button> </li>
+      <li class="li-funcoes"> <button id="iniciarRobo"> Iniciar Robo</button> </li>
+      <li class="li-funcoes"> <button> Contar Hora</button> </li>
+      <li class="li-funcoes"> <button> Zerar base</button> </li>
+      <li class="li-funcoes"> <button> Desligar </button> </li>
+    </ul>
+
+    <div id="tableUser">
+      <h1 id="UserEdit">Usuario</h1>
+      <table>
+        <thead>
+          <th>Usuario</th>
+          <th>Senha</th>
+          <th>Carteira</th>
+          <th>Hora Inicio</th>
+          <th>Hora Fim</th>
+          <th>Hora Intervalo Inicio</th>
+          <th>Hora Intervalo Fim </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+          </tr>
+      </tbody>
+      
+      <button id="voltarEdit">voltar</button>
+    </div>
+
+
+    <script src="app.js"></script>
+    <script src="Interface.js"></script>
+
+</body>
+</html>
