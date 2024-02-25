@@ -25,6 +25,16 @@ class Controller{
             console.error('Erro ao obter dados:', error);
         });
     }
+
+    salvarUsuario() {
+        this.axios.get('http://localhost:5000/guardar_dados')
+        .then( e => {
+            console.log('ok');
+        })
+        .catch(error => {
+            console.error('Erro ao obter dados:', error);
+        });
+    }
 }
 
 module.exports = Controller;

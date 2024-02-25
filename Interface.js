@@ -1,16 +1,19 @@
 
 class Botoes {
     constructor() {
+        this.axios = require('axios');
         this.Controller = require('./app.js');
         this.control = new Controller();
         this.nome;
+        this.editar = false;
+        this.novoUsuario = false;
 
         this.initButtons();
     }
 
     initButtons() {
-        
-
+        let salvarUsuario = document.querySelector("#salvarUsuario");
+        let novoUsuario = document.querySelector("#newUser");
         let iniciarRobo = document.querySelector("#iniciarRobo");
         let editar = document.querySelector("#edit");
         let usuario = document.querySelector("#user");
@@ -27,6 +30,13 @@ class Botoes {
         let voltarRobos = document.querySelector("#voltarRobos");
 
         // BOTOES INTERFACE //
+
+        novoUsuario.addEventListener("click", e => {
+            document.querySelector("#robos").style.display = 'none';
+            document.querySelector("#funcoes").style.display = 'none';
+            document.querySelector("#tableUser").style.display = 'block';
+        });
+
         adm.addEventListener("click", e => {
 
             document.querySelector(".login").style.display = 'block';
@@ -36,6 +46,10 @@ class Botoes {
 
         usuario.addEventListener("click", e => {
             console.log("usuario");
+        });
+
+        salvarUsuario.addEventListener("click", e => {
+            this.obterNovoUsuario();
         });
 
         voltar.addEventListener("click", e =>{
@@ -52,8 +66,6 @@ class Botoes {
             document.querySelector("#funcoes").style.display = 'none';
             document.querySelector("#tableUser").style.display = 'block';
             document.querySelector("#UserEdit").innerHTML = this.nome;
-            
-
         });
         voltarEdit.addEventListener("click",e =>{
             document.querySelector("#tableUser").style.display = 'none';
@@ -99,6 +111,35 @@ class Botoes {
             
         });
     }
+
+    obterNovoUsuario(){
+
+       let dados = {
+            id: 2,
+            usuario: document.querySelector("#usuario").value,
+            senha: document.querySelector("#senha").value,
+            cartera: document.querySelector("#cartera").value,
+            hora_inicio: document.querySelector("#hora_inicio").value,
+            hora_fim: document.querySelector("#hora_fim").value,
+            hora_intervalo_inicio: document.querySelector("#hora_intervalo_inicio").value,
+            hora_intervalo_fim: document.querySelector("#hora_intervalo_fim").value,
+            logado: 'nao'
+        }
+        console.log(dados);
+
+        const urlApiFlask = 'http://localhost:5000/receber_dados';
+
+        // Envia os dados para a API Flask
+
+        this.axios.post(urlApiFlask, dados)
+        .then(response => {
+        console.log('Dados enviados com sucesso:', response.data);
+        })
+        .catch(error => {
+        console.error('Erro ao enviar dados:', error);
+        });
+    }
+   
 }
 
 var btn = new Botoes();

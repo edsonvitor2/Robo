@@ -18,11 +18,11 @@
         <form action="/autenticar" method="post">
           <div>
             <label for="usuario">Usuário:</label>
-            <input type="text" id="usuario" name="usuario" required>
+            <input type="text" id="usuario1" name="usuario" required>
           </div>
           <div>
             <label for="senha">Senha:</label>
-            <input type="password" id="senha" name="senha" required>
+            <input type="password" id="senha1" name="senha" required>
           </div>
           <button type="submit" id="logar">Entrar</button>
         </form>
@@ -42,7 +42,8 @@
 
     <ul id="funcoes">
       <h3 id="userSelect">Usuario</h3> <label id="removeUser">X</label>
-      <li class="li-funcoes"> <button id="edit"> Editar Robo </button> </li>
+      <li class="li-funcoes"> <button id="edit"> Novo Robo </button> </li>
+      <li class="li-funcoes"> <button id="newUser"> Editar Robo </button> </li>
       <li class="li-funcoes"> <button> Subir Base </button> </li>
       <li class="li-funcoes"> <button id="iniciarRobo"> Iniciar Robo</button> </li>
       <li class="li-funcoes"> <button> Contar Hora</button> </li>
@@ -65,18 +66,20 @@
       </thead>
       <tbody>
         <tr>
-            <td><input type="text"></td>
-            <td><input type="text"></td>
-            <td><input type="text"></td>
-            <td><input type="text"></td>
-            <td><input type="text"></td>
-            <td><input type="text"></td>
-            <td><input type="text"></td>
+            <td><input type="text" id="usuario"></td>
+            <td><input type="text" id="senha"></td>
+            <td><input type="text" id="cartera"></td>
+            <td><input type="text" id="hora_inicio"></td>
+            <td><input type="text" id="hora_fim"></td>
+            <td><input type="text" id="hora_intervalo_inicio"></td>
+            <td><input type="text" id="hora_intervalo_fim"></td>
           </tr>
       </tbody>
       
       <button id="voltarEdit">voltar</button>
+      <button id="salvarUsuario">Salvar</button>
     </div>
+
 
 
     <script src="app.js"></script>

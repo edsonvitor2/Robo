@@ -1,21 +1,74 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import pyodbc
 
 app = Flask(__name__)
 CORS(app)  # Adiciona suporte a CORS à sua aplicação
 
+# Estabelece conexão com o banco de dados SQL Server
+data_connection = (
+    "Driver={SQL Server};"
+    "Server=DESKTOP-71U6D3E;"
+    "Database=merger;"
+    "UID=sa;"
+    "PWD=edson1234;"
+)
+
+def inserir_dados(id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado):
+    try:
+        connection = pyodbc.connect(data_connection)
+        cursor = connection.cursor()
+
+        print("Valores a serem inseridos:")
+        print("id:", id)
+        print("usuario:", usuario)
+        print("senha:", senha)
+        print("cartera:", cartera)
+        print("hora_inicio:", hora_inicio)
+        print("hora_fim:", hora_fim)
+        print("hora_intervalo_inicio:", hora_intervalo_inicio)
+        print("hora_intervalo_fim:", hora_intervalo_fim)
+        print("logado:", logado)
+
+        # Executa a inserção dos dados na tabela
+        cursor.execute("INSERT INTO usuariosRobo (id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                       (id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado))
+        
+        connection.commit()
+        connection.close()
+        return True
+    except Exception as e:
+        print("Erro ao inserir dados:", str(e))
+        return False
+
+
+@app.route('/receber_dados', methods=['POST'])
+def receber_dados():
+    data = request.get_json()
+    id = data.get('id')
+    usuario = data.get('usuario')
+    senha = data.get('senha')
+    cartera = data.get('cartera')
+    hora_inicio = data.get('hora_inicio')
+    hora_fim = data.get('hora_fim')
+    hora_intervalo_inicio = data.get('hora_intervalo_inicio')
+    hora_intervalo_fim = data.get('hora_intervalo_fim')
+    logado = data.get('logado')
+
+    # Verifica se todos os campos necessários foram recebidos
+    if id and usuario and senha and cartera and hora_inicio and hora_fim and hora_intervalo_inicio and hora_intervalo_fim and logado is not None:
+        # Chama a função inserir_dados com todos os argumentos necessários
+        if inserir_dados(id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado):
+            return jsonify({"mensagem": "Dados inseridos com sucesso!"}), 200
+        else:
+            return jsonify({"mensagem": "Erro ao inserir dados"}), 500
+    else:
+        return jsonify({"mensagem": "Dados incompletos"}), 400
+
 # Função para obter os dados do usuário "jafalcao"
 def obter_dados_jafalcao():
     try:
-        # Estabelecer a conexão com o banco de dados SQL Server
-        data_connection = (
-            "Driver={SQL Server};"
-            "Server=192.168.4.10;"
-            "Database=merger;"
-            "UID=sa;"
-            "PWD=etropus@147258;"
-        )
+        
         connection = pyodbc.connect(data_connection)
         print("Conexão bem sucedida!!!")
         
@@ -61,14 +114,7 @@ def dados_usuarios_jafalcao():
 # Função para obter os dados do usuário "ipmiranda"
 def obter_dados_ipmiranda():
     try:
-        # Estabelecer a conexão com o banco de dados SQL Server
-        data_connection = (
-            "Driver={SQL Server};"
-            "Server=192.168.4.10;"
-            "Database=merger;"
-            "UID=sa;"
-            "PWD=etropus@147258;"
-        )
+        
         connection = pyodbc.connect(data_connection)
         print("Conexão bem sucedida!!!")
         
@@ -111,6 +157,6 @@ def obter_dados_ipmiranda():
 def dados_usuarios_ipmiranda():
     return obter_dados_ipmiranda()
 
-# Inicie o servidor Flask
+# Inicia o servidor Flask
 if __name__ == '__main__':
     app.run(debug=True)
