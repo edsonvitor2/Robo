@@ -8,10 +8,10 @@ CORS(app)  # Adiciona suporte a CORS à sua aplicação
 # Estabelece conexão com o banco de dados SQL Server
 data_connection = (
     "Driver={SQL Server};"
-    "Server=DESKTOP-71U6D3E;"
+    "Server=192.168.4.10;"
     "Database=merger;"
     "UID=sa;"
-    "PWD=edson1234;"
+    "PWD=etropus@147258;"
 )
 
 def inserir_dados(id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado):
