@@ -29,11 +29,54 @@ class Robo {
             
             await this.delay(5000); // Espera 5 segundos
 
-            await page.type('[id="txt_CollectSearch"]', '36014142');
+            await page.type('[id="txt_CollectSearch"]', '36015470'); // 36015470 erro de 2 contratos ou mais 
             console.log('Pesquisar após 5 segundos');
 
             await page.keyboard.press('Enter');
+
+            await this.delay(5000); // Espera 5 segundos
+
+            // Encontra todos os elementos <a> na página
+            const links = await page.$$('a');
+
+            // Verifica se algum dos links tem o texto "nome"
+            for (const link of links) {
+                const textoLink = await page.evaluate(element => element.textContent.trim(), link);
+                if (textoLink === 'A A PEREIRA SIQUEIRA') {
+                    // Tenta clicar no link com o texto "nome"
+                    try {
+                        await link.click();
+                        console.log('Clicou no link com o texto "A A PEREIRA SIQUEIRA".');
+                        await this.delay(5000); // Espera 5 segundos
+                        break;
+                    } catch (error) {
+                        console.error('Erro ao clicar no link:');
+                        break;
+                    }
+                }
+            }
+            console.log('continuando!!')
             
+                /*
+                let collectOmniIndexPlaceHolder;
+            try {
+                collectOmniIndexPlaceHolder = await page.$('#CollectOmniIndexPlaceHolder');
+                console.log('mais de 1 contrato encontrado')
+            } catch (error) {
+                console.error('Erro ao verificar a existência do elemento:', error);
+            }
+            
+            const conteudoTagsB = await page.$$eval('b', elements => elements.map(element => element.textContent.trim()));
+
+                const textoEsperado = 'Contas em Assessorias Externas - NÃO DISPONÍVEIS';
+                
+                if (conteudoTagsB.includes(textoEsperado)) {
+                    console.log(`O texto "${textoEsperado}" foi encontrado dentro das tags <b>.`);
+                    // Faça algo se o texto for encontrado
+                } else {
+                    console.log(`O texto "${textoEsperado}" não foi encontrado dentro das tags <b>.`);
+                    // Faça algo se o texto não for encontrado
+                }*/
         } catch (erro) {
             console.error('Ocorreu um erro:', erro);
         }
