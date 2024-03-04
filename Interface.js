@@ -66,6 +66,7 @@ class Botoes {
             document.querySelector("#funcoes").style.display = 'none';
             document.querySelector("#tableUser").style.display = 'block';
             document.querySelector("#UserEdit").innerHTML = this.nome;
+            this.control.listarDadosUsuarios();
         });
         voltarEdit.addEventListener("click",e =>{
             document.querySelector("#tableUser").style.display = 'none';

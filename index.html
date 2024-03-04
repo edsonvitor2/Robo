@@ -42,8 +42,8 @@
 
     <ul id="funcoes">
       <h3 id="userSelect">Usuario</h3> <label id="removeUser">X</label>
-      <li class="li-funcoes"> <button id="edit"> Novo Robo </button> </li>
-      <li class="li-funcoes"> <button id="newUser"> Editar Robo </button> </li>
+      <li class="li-funcoes"> <button id="newUser"> Novo Robo </button> </li>
+      <li class="li-funcoes"> <button id="edit"> Editar Robo </button> </li>
       <li class="li-funcoes"> <button> Subir Base </button> </li>
       <li class="li-funcoes"> <button id="iniciarRobo"> Iniciar Robo</button> </li>
       <li class="li-funcoes"> <button> Contar Hora</button> </li>
@@ -75,9 +75,29 @@
             <td><input type="text" id="hora_intervalo_fim"></td>
           </tr>
       </tbody>
-      
+    </table>
+    <br>
       <button id="voltarEdit">voltar</button>
       <button id="salvarUsuario">Salvar</button>
+    </div>
+
+    <div>
+      <table>
+        <thead>
+          <th>Id</th>
+          <th>Usuario</th>
+          <th>Senha</th>
+          <th>Carteira</th>
+          <th>Hora Inicio</th>
+          <th>Hora Fim</th>
+          <th>Hora Intervalo Inicio</th>
+          <th>Hora Intervalo Fim </th>
+        </tr>
+      </thead>
+      <tbody id="tabelaUser">
+        
+      </tbody>
+    </table>
     </div>
 
 

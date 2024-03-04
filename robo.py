@@ -157,6 +157,50 @@ def obter_dados_ipmiranda():
 def dados_usuarios_ipmiranda():
     return obter_dados_ipmiranda()
 
+
+def obter_dados_usuarios():
+    try:
+        connection = pyodbc.connect(data_connection)
+        print("Conexão bem sucedida!!!")
+        
+        cursor = connection.cursor()
+
+        # Executar uma consulta para obter todos os usuários
+        cursor.execute("SELECT id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado FROM usuariosRobo")
+
+        # Obter todas as linhas retornadas pela consulta
+        linhas = cursor.fetchall()
+
+        connection.close()
+        
+        dados_usuarios = []
+
+        # Processar cada linha e adicionar os dados do usuário a uma lista
+        for linha in linhas:
+            dados = {
+                "id": linha.id,
+                "usuario": linha.usuario,
+                "senha": linha.senha,
+                "cartera": linha.cartera,
+                "hora_inicio": linha.hora_inicio,
+                "hora_fim": linha.hora_fim,
+                "hora_intervalo_inicio": linha.hora_intervalo_inicio,
+                "hora_intervalo_fim": linha.hora_intervalo_fim,
+                "logado": linha.logado
+            }
+            dados_usuarios.append(dados)
+
+        print(dados_usuarios)
+        return jsonify(dados_usuarios)
+            
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
+# Rota para acessar os dados de todos os usuários
+@app.route('/dados_usuarios')
+def dados_usuarios():
+    return obter_dados_usuarios()
+
 # Inicia o servidor Flask
 if __name__ == '__main__':
     app.run(debug=True)
