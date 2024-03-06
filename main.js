@@ -1,4 +1,5 @@
 const { app, BrowserWindow } = require('electron');
+const { dialog } = require('electron');
 
 function createWindow () {
   const mainWindow = new BrowserWindow({

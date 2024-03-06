@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import pandas as pd
 import pyodbc
 
 app = Flask(__name__)
@@ -13,6 +14,22 @@ data_connection = (
     "UID=sa;"
     "PWD=etropus@147258;"
 )
+
+
+@app.route('/receber_base', methods=['POST'])
+def receber_base():
+    data = request.get_json()
+    caminho = data.get('caminho')
+
+    if caminho:
+        print("Caminho do arquivo Excel:", caminho)
+        connection = pyodbc.connect(data_connection)
+        print("Conexão bem sucedida!!!")
+
+        return jsonify({"mensagem": "Caminho do arquivo Excel recebido com sucesso!"}), 200
+    else:
+        return jsonify({"mensagem": "Caminho do arquivo não fornecido"}), 400
+
 
 def inserir_dados(id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado):
     try:
@@ -142,7 +159,8 @@ def obter_dados_ipmiranda():
                 "hora_fim": linha.hora_fim,
                 "hora_intervalo_inicio": linha.hora_intervalo_inicio,
                 "hora_intervalo_fim": linha.hora_intervalo_fim,
-                "logado": linha.logado
+                "logado": linha.logado,
+                "tempo_logado": linha.tempo_logado
             }
             print(dados)
             return jsonify(dados)
@@ -166,7 +184,7 @@ def obter_dados_usuarios():
         cursor = connection.cursor()
 
         # Executar uma consulta para obter todos os usuários
-        cursor.execute("SELECT id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado FROM usuariosRobo")
+        cursor.execute("SELECT id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado , tempoMedioAcionamento, tempo_logado FROM usuariosRobo")
 
         # Obter todas as linhas retornadas pela consulta
         linhas = cursor.fetchall()
@@ -186,7 +204,9 @@ def obter_dados_usuarios():
                 "hora_fim": linha.hora_fim,
                 "hora_intervalo_inicio": linha.hora_intervalo_inicio,
                 "hora_intervalo_fim": linha.hora_intervalo_fim,
-                "logado": linha.logado
+                "logado": linha.logado,
+                "tempo_medio_acionamento": linha.tempoMedioAcionamento,
+                "tempo_logado":linha.tempo_logado
             }
             dados_usuarios.append(dados)
 

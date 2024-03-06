@@ -1,17 +1,18 @@
 
+
 class Botoes {
     constructor() {
         this.axios = require('axios');
         this.Controller = require('./app.js');
-        this.control = new Controller();
+        this.control = new this.Controller();
         this.nome;
         this.editar = false;
         this.novoUsuario = false;
-
         this.initButtons();
     }
 
     initButtons() {
+        let subirBase = document.getElementById('subirBase');
         let salvarUsuario = document.querySelector("#salvarUsuario");
         let novoUsuario = document.querySelector("#newUser");
         let iniciarRobo = document.querySelector("#iniciarRobo");
@@ -30,6 +31,17 @@ class Botoes {
         let voltarRobos = document.querySelector("#voltarRobos");
 
         // BOTOES INTERFACE //
+
+        subirBase.addEventListener("click", async () => {
+            const result = await dialog.showOpenDialog({
+                properties: ['openFile']
+            });
+        
+            if (!result.canceled) {
+                const filePath = result.filePaths[0];
+                console.log("Caminho do arquivo selecionado:", filePath);
+            }
+        });
 
         novoUsuario.addEventListener("click", e => {
             document.querySelector("#robos").style.display = 'none';
@@ -114,7 +126,6 @@ class Botoes {
     }
 
     obterNovoUsuario(){
-
        let dados = {
             id: 2,
             usuario: document.querySelector("#usuario").value,
@@ -127,11 +138,8 @@ class Botoes {
             logado: 'nao'
         }
         console.log(dados);
-
         const urlApiFlask = 'http://localhost:5000/receber_dados';
-
         // Envia os dados para a API Flask
-
         this.axios.post(urlApiFlask, dados)
         .then(response => {
         console.log('Dados enviados com sucesso:', response.data);
@@ -140,6 +148,10 @@ class Botoes {
         console.error('Erro ao enviar dados:', error);
         });
     }
+
+    obterBase(){
+        
+     }
    
 }
 

@@ -61,7 +61,9 @@ class Controller{
                     hora_fim: usuario.hora_fim,
                     hora_intervalo_inicio: usuario.hora_intervalo_inicio,
                     hora_intervalo_fim: usuario.hora_intervalo_fim,
-                    logado: usuario.logado
+                    logado: usuario.logado,
+                    tempo_medio_acionamento: usuario.tempo_medio_acionamento,
+                    tempo_logado: usuario.tempo_logado
                 };
                 usuarios.push(usuarioObj);
             });
@@ -92,6 +94,8 @@ class Controller{
                 <td>${user.hora_fim}</td>
                 <td>${user.hora_intervalo_inicio}</td>
                 <td>${user.hora_intervalo_fim}</td>
+                <td>${user.tempo_medio_acionamento}</td>
+                <td>${user.tempo_logado}</td>
             `;
             
             tbody.appendChild(tr);
