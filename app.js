@@ -98,6 +98,19 @@ class Controller{
                 <td>${user.tempo_logado}</td>
             `;
             
+            
+            tr.addEventListener("click", function() {
+            document.querySelector("#id").value = user.id;
+            document.querySelector("#usuario").value = user.usuario;
+            document.querySelector("#senha").value = user.senha;
+            document.querySelector("#cartera").value = user.cartera;
+            document.querySelector("#hora_inicio").value = user.hora_inicio;
+            document.querySelector("#hora_fim").value = user.hora_fim;
+            document.querySelector("#hora_intervalo_inicio").value = user.hora_intervalo_inicio;
+            document.querySelector("#hora_intervalo_fim").value = user.hora_intervalo_fim;
+            document.querySelector("#tempo_medio_acionamento").value = user.tempo_medio_acionamento;
+            });
+
             tbody.appendChild(tr);
         });
     }

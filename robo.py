@@ -15,22 +15,6 @@ data_connection = (
     "PWD=etropus@147258;"
 )
 
-
-@app.route('/receber_base', methods=['POST'])
-def receber_base():
-    data = request.get_json()
-    caminho = data.get('caminho')
-
-    if caminho:
-        print("Caminho do arquivo Excel:", caminho)
-        connection = pyodbc.connect(data_connection)
-        print("Conexão bem sucedida!!!")
-
-        return jsonify({"mensagem": "Caminho do arquivo Excel recebido com sucesso!"}), 200
-    else:
-        return jsonify({"mensagem": "Caminho do arquivo não fornecido"}), 400
-
-
 def inserir_dados(id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado):
     try:
         connection = pyodbc.connect(data_connection)
@@ -57,6 +41,7 @@ def inserir_dados(id, usuario, senha, cartera, hora_inicio, hora_fim, hora_inter
     except Exception as e:
         print("Erro ao inserir dados:", str(e))
         return False
+
 
 
 @app.route('/receber_dados', methods=['POST'])
