@@ -49,6 +49,7 @@ class Botoes {
         salvarUsuario.addEventListener("click", e => {
             if(this.editar == true){
                 this.editarUsuario();
+                
             }else if (this.editar == false){
                 this.obterNovoUsuario();
             }
@@ -68,14 +69,19 @@ class Botoes {
             document.querySelector("#robos").style.display = 'none';
             document.querySelector("#funcoes").style.display = 'none';
             document.querySelector("#tableUser").style.display = 'block';
+            document.querySelector(".table_user_edit").style.display = 'block';
             document.querySelector("#UserEdit").innerHTML = this.nome;
             this.editar = true;
             this.control.listarDadosUsuarios();
+            
         });
         voltarEdit.addEventListener("click",e =>{
             document.querySelector("#tableUser").style.display = 'none';
+            document.querySelector(".table_user_edit").style.display = 'none'
             document.querySelector("#robos").style.display = 'block';
             document.querySelector("#funcoes").style.display = 'block';
+            this.editar = false;
+            document.querySelector("#tabelaUser").innerHTML = '';
         }); 
 
 
@@ -119,7 +125,6 @@ class Botoes {
 
     editarUsuario(){
         let dados = {
-            id: document.querySelector("#id").value,
             usuario: document.querySelector("#usuario").value,
             senha: document.querySelector("#senha").value,
             cartera: document.querySelector("#cartera").value,
@@ -127,20 +132,22 @@ class Botoes {
             hora_fim: document.querySelector("#hora_fim").value,
             hora_intervalo_inicio: document.querySelector("#hora_intervalo_inicio").value,
             hora_intervalo_fim: document.querySelector("#hora_intervalo_fim").value,
-            logado: 'nao'
+            logado: 'nao',
+            tempoMedioAcionamento: document.querySelector("#tempo_medio_acionamento").value,
         }
-        //console.log('Editar',dados);
+        console.log('Editar',dados);
         const urlApiFlask = 'http://localhost:5000/editar_usuarios';
         // Envia os dados para a API Flask
         this.axios.post(urlApiFlask, dados)
         .then(response => {
         console.log('Dados enviados com sucesso:', response.data);
+
+        this.control.listarDadosUsuarios();
         })
         .catch(error => {
         console.error('Erro ao enviar dados:', error);
         });
 
-        this.editar = false;
     }
     obterNovoUsuario(){
        let dados = {
@@ -152,7 +159,10 @@ class Botoes {
             hora_fim: document.querySelector("#hora_fim").value,
             hora_intervalo_inicio: document.querySelector("#hora_intervalo_inicio").value,
             hora_intervalo_fim: document.querySelector("#hora_intervalo_fim").value,
-            logado: 'nao'
+            logado: 'nao',
+            tempoMedioAcionamento: document.querySelector("#tempo_medio_acionamento").value,
+            acionamentos:0,
+            tempo_logado:"00:00:00"
         }
         console.log(dados);
         const urlApiFlask = 'http://localhost:5000/receber_dados';
@@ -166,9 +176,6 @@ class Botoes {
         });
     }
 
-    obterBase(){
-        
-     }
    
 }
 

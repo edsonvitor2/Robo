@@ -5,24 +5,37 @@ class Controller{
         
     }
 
-    listarJafalacao(){
+    listarJafalacao() {
+        // Obter dados dos usuários
         this.axios.get('http://localhost:5000/dados_usuarios_jafalcao')
             .then(response => {
                 const dadosUsuarios = response.data;
-
-                let usuario = dadosUsuarios.usuario;
-                let senha = dadosUsuarios.senha;
+                console.log('Dados dos usuários:', dadosUsuarios);
+    
+                // Aqui você pode fazer algo com os dados dos usuários, como iniciar um robô
                 
-                console.log(usuario,senha);
-
-                this.robo = new Robo();
-                this.robo.iniciarRobo(dadosUsuarios);
+                // Obter dados da baseRobo
+                this.axios.get('http://localhost:5000/dados_base_robo')
+                    .then(response => {
+                        const dadosBaseRobo = response.data;
+                        console.log('Dados da baseRobo:', dadosBaseRobo);
+    
+                        // Filtrar os dados da baseRobo para pegar apenas os objetos com a agência igual a "BRAFIN - GERAL"
+                        const dadosBRAFINGeral = dadosBaseRobo.filter(dado => dado.agencia === dadosUsuarios.agencia);
+                        console.log('Dados da baseRobo com agência BRAFIN - GERAL:', dadosBRAFINGeral);
+    
+                        // Aqui você pode fazer algo com os dados da baseRobo com agência BRAFIN - GERAL
+                    })
+                    .catch(error => {
+                        console.error('Erro ao obter dados da baseRobo:', error);
+                    });
             })
             .catch(error => {
-                console.error('Erro ao obter dados:', error);
+                console.error('Erro ao obter dados dos usuários:', error);
             });
-
-        }
+    }
+    
+    
 
     listarIpmiranda() {
         this.axios.get('http://localhost:5000/dados_usuarios_ipmiranda')
@@ -34,8 +47,8 @@ class Controller{
             
             console.log(usuario,senha);
 
-            this.robo = new Robo();
-            this.robo.iniciarRobo(dadosUsuarios);
+            /*this.robo = new Robo();
+            this.robo.iniciarRobo(dadosUsuarios);*/
         })
         .catch(error => {
             console.error('Erro ao obter dados:', error);
@@ -100,7 +113,6 @@ class Controller{
             
             
             tr.addEventListener("click", function() {
-            document.querySelector("#id").value = user.id;
             document.querySelector("#usuario").value = user.usuario;
             document.querySelector("#senha").value = user.senha;
             document.querySelector("#cartera").value = user.cartera;

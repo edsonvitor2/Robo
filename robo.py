@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import pandas as pd
 import pyodbc
+import datetime
 
 app = Flask(__name__)
 CORS(app)  # Adiciona suporte a CORS à sua aplicação
@@ -15,37 +16,76 @@ data_connection = (
     "PWD=etropus@147258;"
 )
 
-def inserir_dados(id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado):
+def obter_proximo_id():
     try:
+        # Estabelece a conexão com o banco de dados
         connection = pyodbc.connect(data_connection)
         cursor = connection.cursor()
 
-        print("Valores a serem inseridos:")
-        print("id:", id)
-        print("usuario:", usuario)
-        print("senha:", senha)
-        print("cartera:", cartera)
-        print("hora_inicio:", hora_inicio)
-        print("hora_fim:", hora_fim)
-        print("hora_intervalo_inicio:", hora_intervalo_inicio)
-        print("hora_intervalo_fim:", hora_intervalo_fim)
-        print("logado:", logado)
+        # Executa a consulta para obter o número total de usuários
+        cursor.execute("SELECT COUNT(*) FROM usuariosRobo")
 
-        # Executa a inserção dos dados na tabela
-        cursor.execute("INSERT INTO usuariosRobo (id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                       (id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado))
-        
-        connection.commit()
-        connection.close()
-        return True
+        # Recupera o número total de usuários
+        total_usuarios = cursor.fetchone()[0]
+
+        # Incrementa o número total de usuários em 1 para obter o próximo ID disponível
+        proximo_id = total_usuarios + 1
+
+
+        return proximo_id
+    except Exception as e:
+        print("Erro ao obter próximo ID:", str(e))
+        return None
+
+# Função de inserção de dados atualizada para incluir novos parâmetros
+def inserir_dados(usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado, tempoMedioAcionamento, acionamentos, tempo_logado):
+    try:
+        proximo_id = obter_proximo_id()
+
+        if proximo_id is not None:
+            connection = pyodbc.connect(data_connection)
+            cursor = connection.cursor()
+
+            cursor.execute("INSERT INTO usuariosRobo (id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado, tempoMedioAcionamento, acionamentos, tempo_logado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                           (proximo_id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado, tempoMedioAcionamento, acionamentos, tempo_logado))
+
+            connection.commit()
+
+            
+            return True
+        else:
+            return False
     except Exception as e:
         print("Erro ao inserir dados:", str(e))
         return False
 
-
-
+# Função de recebimento de dados atualizada para incluir novos parâmetros
 @app.route('/receber_dados', methods=['POST'])
 def receber_dados():
+    data = request.get_json()
+    usuario = data.get('usuario')
+    senha = data.get('senha')
+    cartera = data.get('cartera')
+    hora_inicio = data.get('hora_inicio')
+    hora_fim = data.get('hora_fim')
+    hora_intervalo_inicio = data.get('hora_intervalo_inicio')
+    hora_intervalo_fim = data.get('hora_intervalo_fim')
+    logado = data.get('logado')
+    tempoMedioAcionamento = data.get('tempoMedioAcionamento')
+    acionamentos = data.get('acionamentos')
+    tempo_logado = data.get('tempo_logado')
+
+    if usuario and senha and cartera and hora_inicio and hora_fim and hora_intervalo_inicio and hora_intervalo_fim and logado is not None:
+        if inserir_dados(usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado, tempoMedioAcionamento, acionamentos, tempo_logado):
+            return jsonify({"mensagem": "Dados inseridos com sucesso!"}), 200
+        else:
+            return jsonify({"mensagem": "Erro ao inserir dados"}), 500
+    else:
+        return jsonify({"mensagem": "Dados incompletos"}), 400
+    
+
+@app.route('/editar_usuarios', methods=['POST'])
+def editar_usuarios():
     data = request.get_json()
     id = data.get('id')
     usuario = data.get('usuario')
@@ -56,16 +96,23 @@ def receber_dados():
     hora_intervalo_inicio = data.get('hora_intervalo_inicio')
     hora_intervalo_fim = data.get('hora_intervalo_fim')
     logado = data.get('logado')
+    tempoMedioAcionamento = data.get('tempoMedioAcionamento')
 
-    # Verifica se todos os campos necessários foram recebidos
-    if id and usuario and senha and cartera and hora_inicio and hora_fim and hora_intervalo_inicio and hora_intervalo_fim and logado is not None:
-        # Chama a função inserir_dados com todos os argumentos necessários
-        if inserir_dados(id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado):
-            return jsonify({"mensagem": "Dados inseridos com sucesso!"}), 200
-        else:
-            return jsonify({"mensagem": "Erro ao inserir dados"}), 500
-    else:
-        return jsonify({"mensagem": "Dados incompletos"}), 400
+    # Cria uma conexão com o banco de dados
+    conn = pyodbc.connect(data_connection)
+    cursor = conn.cursor()
+
+    # Atualiza os dados na linha correspondente ao ID
+    cursor.execute("UPDATE usuariosRobo SET usuario=?, senha=?, cartera=?, hora_inicio=?, hora_fim=?, hora_intervalo_inicio=?, hora_intervalo_fim=?, logado=?, tempoMedioAcionamento=? WHERE id=?", (usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado, tempoMedioAcionamento,id))
+
+    # Commit para salvar as alterações no banco de dados
+    conn.commit()
+
+    # Fecha a conexão com o banco de dados
+    cursor.close()
+    conn.close()
+
+    return jsonify({'mensagem': 'Dados do usuário atualizados com sucesso'})
 
 # Função para obter os dados do usuário "jafalcao"
 def obter_dados_jafalcao():
@@ -84,7 +131,6 @@ def obter_dados_jafalcao():
         linha = cursor.fetchone()
 
         # Fechar a conexão
-        connection.close()
         
         # Verificar se a linha foi encontrada
         if linha:
@@ -130,7 +176,6 @@ def obter_dados_ipmiranda():
         linha = cursor.fetchone()
 
         # Fechar a conexão
-        connection.close()
         
         # Verificar se a linha foi encontrada
         if linha:
@@ -174,7 +219,6 @@ def obter_dados_usuarios():
         # Obter todas as linhas retornadas pela consulta
         linhas = cursor.fetchall()
 
-        connection.close()
         
         dados_usuarios = []
 
@@ -205,6 +249,51 @@ def obter_dados_usuarios():
 @app.route('/dados_usuarios')
 def dados_usuarios():
     return obter_dados_usuarios()
+
+def obter_dados_base_robo():
+    try:
+        connection = pyodbc.connect(data_connection)
+        print("Conexão bem sucedida!!!")
+        
+        cursor = connection.cursor()
+
+        # Executar uma consulta para obter todos os dados da tabela baseRobo
+        cursor.execute("SELECT agencia, cpf_cnpj, cliente, operacao, data_evento, cod_evento, desc_evento, obs_evento FROM baseRobo")
+
+        # Obter todas as linhas retornadas pela consulta
+        linhas = cursor.fetchall()
+
+        dados_base_robo = []
+
+        # Processar cada linha e adicionar os dados à lista
+        for linha in linhas:
+            # Converte a string de data_evento para um objeto datetime
+            data_evento = datetime.datetime.strptime(linha.data_evento, "%Y-%m-%d")
+
+            # Adiciona os dados à lista
+            dados = {
+                "agencia": linha.agencia,
+                "cpf_cnpj": linha.cpf_cnpj,
+                "cliente": linha.cliente,
+                "operacao": linha.operacao,
+                "data_evento": data_evento.strftime("%Y-%m-%d"),  # Ajuste para o formato correto
+                "cod_evento": linha.cod_evento,
+                "desc_evento": linha.desc_evento,
+                "obs_evento": linha.obs_evento
+            }
+            dados_base_robo.append(dados)
+
+        print(dados_base_robo)
+        return jsonify(dados_base_robo)
+            
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
+# Rota para acessar os dados da tabela baseRobo
+@app.route('/dados_base_robo')
+def dados_base_robo():
+    return obter_dados_base_robo()
+
 
 # Inicia o servidor Flask
 if __name__ == '__main__':

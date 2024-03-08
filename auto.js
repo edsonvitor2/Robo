@@ -5,7 +5,33 @@ class Robo {
 
     async iniciarRobo(usuario) {
         try {
-            console.log('deu certo', usuario);
+            
+
+            // Crie uma instância do objeto Date
+            const dataAtual = new Date();
+
+            // Obtenha a hora, os minutos e os segundos
+            const hora = dataAtual.getHours();
+            const minutos = dataAtual.getMinutes();
+            const segundos = dataAtual.getSeconds();
+
+            // Formate os valores em uma string no formato desejado
+            const horario = `${hora.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+
+            let intervalo_inicio = usuario.hora_intervalo_inicio;
+            let intervalor_fim = usuario.hora_intervalo_fim;
+            let inicio = usuario.hora_inicio;
+            let fim = usuario.hora_fim;
+
+            if(horario > inicio && horario < fim){
+                if(horario > intervalo_inicio && horario  < intervalor_fim){
+                    console.log('Horario de lanche')
+                }else{
+                    console.log("fora do horario de lanche");
+                }
+            }else{
+                console.log("fora do horario de serviço");
+            }
 
             const browser = await this.puppeteer.launch({ headless: false }); // instancia o navegador 
             const page = await browser.newPage(); // abre o navegador
@@ -88,7 +114,7 @@ class Robo {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    // Função para selecionar aleatoriamente uma mensagem com base nas porcentagens
+    //Função para selecionar aleatoriamente uma mensagem com base nas porcentagens
     selecionarMensagem() {
 // Array com as mensagens disponíveis
 const mensagensGrupo1 = [
