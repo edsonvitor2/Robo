@@ -125,6 +125,7 @@ class Botoes {
 
     editarUsuario(){
         let dados = {
+            id: document.querySelector("#id").value,
             usuario: document.querySelector("#usuario").value,
             senha: document.querySelector("#senha").value,
             cartera: document.querySelector("#cartera").value,

@@ -12,8 +12,8 @@ function createWindow () {
   });
   mainWindow.loadFile('index.html');
 
-  // Iniciar o servidor Python como um processo secundário
-  //const pythonProcess = spawn('python', ['./robo.py']);
+  //Iniciar o servidor Python como um processo secundário
+  const pythonProcess = spawn('python', ['./robo.py']);
 
   // Exibir qualquer saída do processo Python no console
   pythonProcess.stdout.on('data', (data) => {

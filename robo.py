@@ -3,6 +3,7 @@ from flask_cors import CORS
 import pandas as pd
 import pyodbc
 import datetime
+from datetime import time
 
 app = Flask(__name__)
 CORS(app)  # Adiciona suporte a CORS à sua aplicação
@@ -219,7 +220,6 @@ def obter_dados_usuarios():
         # Obter todas as linhas retornadas pela consulta
         linhas = cursor.fetchall()
 
-        
         dados_usuarios = []
 
         # Processar cada linha e adicionar os dados do usuário a uma lista
@@ -229,13 +229,13 @@ def obter_dados_usuarios():
                 "usuario": linha.usuario,
                 "senha": linha.senha,
                 "cartera": linha.cartera,
-                "hora_inicio": linha.hora_inicio,
-                "hora_fim": linha.hora_fim,
-                "hora_intervalo_inicio": linha.hora_intervalo_inicio,
-                "hora_intervalo_fim": linha.hora_intervalo_fim,
+                "hora_inicio": linha.hora_inicio[:8],  # Extrair os primeiros 8 caracteres para obter o formato "00:00:00"
+                "hora_fim": linha.hora_fim[:8],        # Extrair os primeiros 8 caracteres para obter o formato "00:00:00"
+                "hora_intervalo_inicio": linha.hora_intervalo_inicio[:8],  # Extrair os primeiros 8 caracteres para obter o formato "00:00:00"
+                "hora_intervalo_fim": linha.hora_intervalo_fim[:8],        # Extrair os primeiros 8 caracteres para obter o formato "00:00:00"
                 "logado": linha.logado,
-                "tempo_medio_acionamento": linha.tempoMedioAcionamento,
-                "tempo_logado":linha.tempo_logado
+                "tempo_medio_acionamento": linha.tempoMedioAcionamento[:8],
+                "tempo_logado": linha.tempo_logado[:8]
             }
             dados_usuarios.append(dados)
 
@@ -244,6 +244,7 @@ def obter_dados_usuarios():
             
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
+
 
 # Rota para acessar os dados de todos os usuários
 @app.route('/dados_usuarios')

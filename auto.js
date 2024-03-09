@@ -3,112 +3,63 @@ class Robo {
         this.puppeteer = require('puppeteer'); // instancia puppeteer
     }
 
-    async iniciarRobo(usuario) {
+    async iniciarRobo(usuario, cliente) {
         try {
+            const browser = await this.puppeteer.launch({ headless: false }); // Instancia o navegador 
+            const page = await browser.newPage(); // Abre uma nova página
+            await page.goto('https://alpheratz.itapevarec.com.br/Alpheratz/login.aspx'); // Abre o site 
             
+            /*const browser = await this.puppeteer.launch({
+                executablePath: "C:\\Program Files\\Google\\Chrome\\Applicationchrome.exe",
+                headless: false  // ou true, dependendo de sua preferência
+            });*/
 
-            // Crie uma instância do objeto Date
-            const dataAtual = new Date();
-
-            // Obtenha a hora, os minutos e os segundos
-            const hora = dataAtual.getHours();
-            const minutos = dataAtual.getMinutes();
-            const segundos = dataAtual.getSeconds();
-
-            // Formate os valores em uma string no formato desejado
-            const horario = `${hora.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
-
-            let intervalo_inicio = usuario.hora_intervalo_inicio;
-            let intervalor_fim = usuario.hora_intervalo_fim;
-            let inicio = usuario.hora_inicio;
-            let fim = usuario.hora_fim;
-
-            if(horario > inicio && horario < fim){
-                if(horario > intervalo_inicio && horario  < intervalor_fim){
-                    console.log('Horario de lanche')
-                }else{
-                    console.log("fora do horario de lanche");
-                }
-            }else{
-                console.log("fora do horario de serviço");
-            }
-
-            const browser = await this.puppeteer.launch({ headless: false }); // instancia o navegador 
-            const page = await browser.newPage(); // abre o navegador
-            await page.goto('https://alpheratz.itapevarec.com.br/Alpheratz/login.aspx'); // abre o site 
-            
-            await page.waitForSelector('[id="txt_username"]'); // esperar o site carregar o campo de login
-        
-            await page.type('[name="txt_username"]', `${usuario.usuario}`); // digita o login 
-            await page.type('[name="txt_password"]', `${usuario.senha}`); // digita a senha 
-            await page.click('[name="btn_login"]'); // clica no botao de login
-
-
-            await page.waitForSelector('[id="menuitemsTEST"]');
-            await page.click('[href="ft5/collect.aspx"]');
-
-            await this.delay(5000); // Espera 5 segundos
-
-            await page.waitForSelector('[id="bt_search"]');
-            await page.click('[id="bt_search"]');
-
-            
-            await this.delay(5000); // Espera 5 segundos
-
-            await page.type('[id="txt_CollectSearch"]', '13185479'); // 36015470 erro de 2 contratos ou mais 
-            console.log('Pesquisar após 5 segundos');
-
-            await page.keyboard.press('Enter');
-
-            await this.delay(5000); // Espera 5 segundos
-
-            // Encontra todos os elementos <a> na página
-            const links = await page.$$('a');
-
-            // Verifica se algum dos links tem o texto "nome"
-            for (const link of links) {
-                const textoLink = await page.evaluate(element => element.textContent.trim(), link);
-                if (textoLink === 'A C LINO TRANSPORTE ME') {
-                    // Tenta clicar no link com o texto "nome"
-                    try {
-                        await link.click();
-                        console.log('Clicou no link com o texto "A C LINO TRANSPORTE ME".');
+            var clientes = cliente;
+            var contador = 0;
+    
+            while (contador < clientes.length) { // Loop vai rodar enquanto houver clientes
+                const dataAtual = new Date();
+                const hora = dataAtual.getHours();
+                const minutos = dataAtual.getMinutes();
+                const segundos = dataAtual.getSeconds();
+    
+                const horario = `${hora.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+    
+                let intervalo_inicio = usuario.hora_intervalo_inicio;
+                let intervalor_fim = usuario.hora_intervalo_fim;
+                let inicio = usuario.hora_inicio;
+                let fim = usuario.hora_fim;
+    
+                if (horario > inicio && horario < fim) {
+                    if (horario > intervalo_inicio && horario < intervalor_fim) {
+                        console.log('Horario de lanche');
+                        break;
+                    } else {
+                        console.log('Cliente:');
+                        console.log(clientes[contador].cpf_cnpj);
+    
+                        await page.waitForSelector('[id="txt_username"]'); // Espera o site carregar o campo de login
+                        await page.type('[name="txt_username"]', `${clientes[contador].cpf_cnpj}`); // Digita o CPF/CNPJ 
+                        await page.type('[name="txt_password"]', `${usuario.senha}`); // Digita a senha 
                         await this.delay(5000); // Espera 5 segundos
-                        break;
-                    } catch (error) {
-                        console.error('Erro ao clicar no link:');
-                        break;
+    
+                        await page.reload(); // Atualiza a página
+                        contador++; // Incrementa o contador para ir para o próximo cliente na próxima iteração
                     }
+                } else {
+                    console.log("fora do horario de serviço");
+                    break; // Sai do loop se estiver fora do horário de serviço
                 }
             }
-
-            console.log('continuando!!');
-
-            const conteudoTagsB = await page.$$eval('b', elements => elements.map(element => element.textContent.trim()));
-
-                const textoEsperado = 'Contas em Assessorias Externas - NÃO DISPONÍVEIS';
-                
-                if (conteudoTagsB.includes(textoEsperado)) {
-                    console.log(`O texto "${textoEsperado}" foi encontrado dentro das tags <b>.`);
-                    await this.delay(5000); // Espera 5 segundos
-                    await page.goto('https://alpheratz.itapevarec.com.br/Alpheratz/login.aspx');
-                } else {
-                    console.log(`O texto "${textoEsperado}" não foi encontrado dentro das tags <b>.`);
-
-                    this.selecionarMensagem();
-                    let mensagem = this.selecionarMensagem();
-                    console.log(mensagem);
-                    await page.type('[id="TaskResults"]', `${mensagem}`);
-
-                    await this.delay(15000);
-                    await page.click('[id="bt_SaveWorkflowTracking"]');
-
-                }
-            
+    
+            await browser.close(); // Fecha o navegador após o loop
         } catch (erro) {
             console.error('Ocorreu um erro:', erro);
         }
     }
+    
+    
+    
 
     delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));

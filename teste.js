@@ -9,14 +9,16 @@ const dataAtual = new Date();
             //const horarioFormatado = `${hora.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
 
             // Exiba o horário formatado
-            horarioFormatado = '18:30:00'
+            horarioFormatado = '12:30:00'
 
             if(horarioFormatado > '08:00:00' && horarioFormatado < '18:00:00'){
                 if(horarioFormatado > '12:00:00' && horarioFormatado  < '13:00:00'){
                     console.log('Horario de lanche')
+                    //nao executa o robo!!!
                 }else{
-                    console.log("fora do horario de lanche");
+
                 }
-            }else{
+            }else{  
                 console.log("fora do horario de serviço");
+                // nao executa o robo!!!
             }

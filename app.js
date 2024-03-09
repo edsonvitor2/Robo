@@ -6,52 +6,54 @@ class Controller{
     }
 
     listarJafalacao() {
-        // Obter dados dos usuários
-        this.axios.get('http://localhost:5000/dados_usuarios_jafalcao')
-            .then(response => {
-                const dadosUsuarios = response.data;
-                console.log('Dados dos usuários:', dadosUsuarios);
+        // Fazer ambas as solicitações HTTP simultaneamente
+        Promise.all([
+            this.axios.get('http://localhost:5000/dados_usuarios_jafalcao'),
+            this.axios.get('http://localhost:5000/dados_base_robo')
+        ])
+        .then(responses => {
+            const dadosUsuarios = responses[0].data;
+            const dadosBaseRobo = responses[1].data;
     
-                // Aqui você pode fazer algo com os dados dos usuários, como iniciar um robô
-                
-                // Obter dados da baseRobo
-                this.axios.get('http://localhost:5000/dados_base_robo')
-                    .then(response => {
-                        const dadosBaseRobo = response.data;
-                        console.log('Dados da baseRobo:', dadosBaseRobo);
+            console.log('Dados dos usuários:', dadosUsuarios.cartera);
     
-                        // Filtrar os dados da baseRobo para pegar apenas os objetos com a agência igual a "BRAFIN - GERAL"
-                        const dadosBRAFINGeral = dadosBaseRobo.filter(dado => dado.agencia === dadosUsuarios.agencia);
-                        console.log('Dados da baseRobo com agência BRAFIN - GERAL:', dadosBRAFINGeral);
-    
-                        // Aqui você pode fazer algo com os dados da baseRobo com agência BRAFIN - GERAL
-                    })
-                    .catch(error => {
-                        console.error('Erro ao obter dados da baseRobo:', error);
-                    });
-            })
-            .catch(error => {
-                console.error('Erro ao obter dados dos usuários:', error);
-            });
+            // Filtrar os clientes com base na carteira dos usuários
+            const clientes = dadosBaseRobo.filter(e => e.agencia === dadosUsuarios.cartera);
+            console.log('Clientes:', clientes);
+
+            this.robo = new Robo();
+            this.robo.iniciarRobo(dadosUsuarios,clientes);
+
+        })
+        .catch(errors => {
+            console.error('Erro ao obter dados:', errors);
+        });
     }
     
     
 
     listarIpmiranda() {
-        this.axios.get('http://localhost:5000/dados_usuarios_ipmiranda')
-        .then(response => {
-            const dadosUsuarios = response.data;
+        // Fazer ambas as solicitações HTTP simultaneamente
+        Promise.all([
+            this.axios.get('http://localhost:5000/dados_usuarios_lpmiranda'),
+            this.axios.get('http://localhost:5000/dados_base_robo')
+        ])
+        .then(responses => {
+            const dadosUsuarios = responses[0].data;
+            const dadosBaseRobo = responses[1].data;
+    
+            console.log('Dados dos usuários:', dadosUsuarios.cartera);
+    
+            // Filtrar os clientes com base na carteira dos usuários
+            const clientes = dadosBaseRobo.filter(e => e.agencia === dadosUsuarios.cartera);
+            console.log('Clientes:', clientes);
 
-            let usuario = dadosUsuarios.usuario;
-            let senha = dadosUsuarios.senha;
-            
-            console.log(usuario,senha);
+            this.robo = new Robo();
+            this.robo.iniciarRobo(dadosUsuarios,clientes);
 
-            /*this.robo = new Robo();
-            this.robo.iniciarRobo(dadosUsuarios);*/
         })
-        .catch(error => {
-            console.error('Erro ao obter dados:', error);
+        .catch(errors => {
+            console.error('Erro ao obter dados:', errors);
         });
     }
 
@@ -113,6 +115,7 @@ class Controller{
             
             
             tr.addEventListener("click", function() {
+            document.querySelector("#id").value = user.id,
             document.querySelector("#usuario").value = user.usuario;
             document.querySelector("#senha").value = user.senha;
             document.querySelector("#cartera").value = user.cartera;
