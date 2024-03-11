@@ -118,7 +118,6 @@ def editar_usuarios():
 # Função para obter os dados do usuário "jafalcao"
 def obter_dados_jafalcao():
     try:
-        
         connection = pyodbc.connect(data_connection)
         print("Conexão bem sucedida!!!")
         
@@ -163,7 +162,7 @@ def dados_usuarios_jafalcao():
 # Função para obter os dados do usuário "ipmiranda"
 def obter_dados_ipmiranda():
     try:
-        
+        # Estabelecer conexão com o banco de dados
         connection = pyodbc.connect(data_connection)
         print("Conexão bem sucedida!!!")
         
@@ -171,12 +170,10 @@ def obter_dados_ipmiranda():
         cursor = connection.cursor()
 
         # Executar uma consulta para obter os dados do usuário "ipmiranda"
-        cursor.execute("SELECT id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado FROM usuariosRobo WHERE id = 2")
+        cursor.execute("SELECT id, usuario, senha, cartera, hora_inicio, hora_fim, hora_intervalo_inicio, hora_intervalo_fim, logado, tempo_logado FROM usuariosRobo WHERE id = 2")
 
         # Obter a linha retornada pela consulta
         linha = cursor.fetchone()
-
-        # Fechar a conexão
         
         # Verificar se a linha foi encontrada
         if linha:
@@ -205,7 +202,6 @@ def obter_dados_ipmiranda():
 @app.route('/dados_usuarios_ipmiranda')
 def dados_usuarios_ipmiranda():
     return obter_dados_ipmiranda()
-
 
 def obter_dados_usuarios():
     try:

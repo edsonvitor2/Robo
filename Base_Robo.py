@@ -15,8 +15,8 @@ def carregar_planilha(caminho_planilha):
         try:
             # Atualizar a etiqueta para "Carregando base..." e iniciar a animação da barra de progresso
             lbl_status.config(text="Carregando base...")
-            progress_bar.config(style='Green.Horizontal.TProgressbar')  # Definir a cor da barra de progresso como verde
-            progress_bar.start()
+            progress_bar.config(mode='determinate')  # Mudar o modo da barra de progresso para determinate
+            progress_bar['value'] = 0  # Inicializar o valor da barra de progresso
 
             # Estabelecer a conexão com o banco de dados SQL Server
             data_connection = (
@@ -37,6 +37,9 @@ def carregar_planilha(caminho_planilha):
 
             # Apagar os dados existentes da tabela
             cursor.execute("DELETE FROM baseRobo")
+
+            total_linhas = len(df)
+            linhas_processadas = 0
 
             # Iterar sobre as linhas do DataFrame e inserir cada uma na tabela
             for index, row in df.iterrows():
@@ -60,6 +63,10 @@ def carregar_planilha(caminho_planilha):
                 comando = "INSERT INTO BaseRobo (agencia, cpf_cnpj, cliente, operacao, data_evento, cod_evento, desc_evento, obs_evento) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
                 cursor.execute(comando, (agencia, cpf_cnpj, cliente, operacao, data_evento, cod_evento, desc_evento, obs_evento))
 
+                linhas_processadas += 1
+                progresso = (linhas_processadas / total_linhas) * 100
+                progress_bar['value'] = progresso
+
             # Confirmar as mudanças
             connection.commit()
             print("Tabela atualizada!!")
@@ -67,15 +74,12 @@ def carregar_planilha(caminho_planilha):
             # Fechar a conexão
             connection.close()
 
-            # Atualizar a etiqueta para "Concluído" e parar a animação da barra de progresso
+            # Atualizar a etiqueta para "Concluído"
             lbl_status.config(text="Concluído")
-            progress_bar.stop()
 
         except Exception as e:
-            # Se ocorrer um erro, exibir a mensagem de erro na etiqueta e tornar a barra de progresso vermelha
+            # Se ocorrer um erro, exibir a mensagem de erro na etiqueta
             lbl_status.config(text="Error: " + str(e))
-            progress_bar.config(style='Red.Horizontal.TProgressbar')  # Definir a cor da barra de progresso como vermelha
-            progress_bar.stop()
 
     # Criar uma thread para carregar a planilha
     thread = threading.Thread(target=carregar)
@@ -109,14 +113,6 @@ lbl_status.pack()
 # Criar uma barra de progresso para indicar o progresso do carregamento
 progress_bar = ttk.Progressbar(frame, mode='indeterminate')
 progress_bar.pack()
-
-# Definir o estilo da barra de progresso
-s = ttk.Style()
-s.theme_use('default')
-
-# Criar estilos para a barra de progresso verde e vermelha
-s.configure('Green.Horizontal.TProgressbar', background='green')
-s.configure('Red.Horizontal.TProgressbar', background='red')
 
 # Iniciar o loop da interface gráfica
 root.mainloop()

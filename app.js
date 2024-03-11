@@ -1,133 +1,134 @@
 class Controller{
     
     constructor(){
+        this.ControllerRobo = require('./auto.js');
+        this.robo = new this.ControllerRobo();
+        this.puppeteer = require('puppeteer'); // instancia puppeteer
         this.axios = require('axios');
-        
+        this.sql = require('mssql');
+        this.config={
+            user: 'sa',
+            password: 'etropus@147258',
+            server: '192.168.4.10',
+            database: 'merger',
+            options: {
+                encrypt: false // Se necessário
+            },
+        }
     }
 
-    listarJafalacao() {
-        // Fazer ambas as solicitações HTTP simultaneamente
-        Promise.all([
-            this.axios.get('http://localhost:5000/dados_usuarios_jafalcao'),
-            this.axios.get('http://localhost:5000/dados_base_robo')
-        ])
-        .then(responses => {
-            const dadosUsuarios = responses[0].data;
-            const dadosBaseRobo = responses[1].data;
+    async listarUsuario(User) {
+        try {
+            // Conecta ao banco de dados
+            await this.sql.connect(this.config);
+            
+            // Executa a consulta com parâmetros
+            const result = await this.sql.query`SELECT * FROM usuariosRobo WHERE usuario = ${User}`;
     
-            console.log('Dados dos usuários:', dadosUsuarios.cartera);
-    
-            // Filtrar os clientes com base na carteira dos usuários
-            const clientes = dadosBaseRobo.filter(e => e.agencia === dadosUsuarios.cartera);
-            console.log('Clientes:', clientes);
+            // Exibe os resultados
+            let usuario = result.recordset[0];
+            
+            this.robo.iniciarRobo(usuario);
 
-            this.robo = new Robo();
-            this.robo.iniciarRobo(dadosUsuarios,clientes);
-
-        })
-        .catch(errors => {
-            console.error('Erro ao obter dados:', errors);
-        });
-    }
-    
-    
-
-    listarIpmiranda() {
-        // Fazer ambas as solicitações HTTP simultaneamente
-        Promise.all([
-            this.axios.get('http://localhost:5000/dados_usuarios_lpmiranda'),
-            this.axios.get('http://localhost:5000/dados_base_robo')
-        ])
-        .then(responses => {
-            const dadosUsuarios = responses[0].data;
-            const dadosBaseRobo = responses[1].data;
-    
-            console.log('Dados dos usuários:', dadosUsuarios.cartera);
-    
-            // Filtrar os clientes com base na carteira dos usuários
-            const clientes = dadosBaseRobo.filter(e => e.agencia === dadosUsuarios.cartera);
-            console.log('Clientes:', clientes);
-
-            this.robo = new Robo();
-            this.robo.iniciarRobo(dadosUsuarios,clientes);
-
-        })
-        .catch(errors => {
-            console.error('Erro ao obter dados:', errors);
-        });
+        } catch (err) {
+            // Se houver algum erro, exibe-o
+            console.error('Erro ao conectar ou consultar o banco de dados:', err);
+        }
     }
 
-    listarDadosUsuarios() {
-        this.axios.get('http://localhost:5000/dados_usuarios')
-        .then(response => {
-            const dadosUsuarios = response.data;
+    async listarDadosUsuarios() {
+        try {
+            // Conecta ao banco de dados
+            await this.sql.connect(this.config);
+            
+            // Executa a consulta
+            const result = await this.sql.query('SELECT * FROM usuariosRobo');
+            
+            // Exibe os resultados
+            const usuarios = result.recordset;
     
-            // Array para armazenar os objetos de usuário
-            let usuarios = [];
+            console.log(usuarios); // Exibe os usuários recebidos do banco de dados
     
-            // Iterar sobre cada usuário e criar um objeto para cada um
-            dadosUsuarios.forEach(usuario => {
-                let usuarioObj = {
-                    id: usuario.id,
-                    usuario: usuario.usuario,
-                    senha: usuario.senha,
-                    cartera: usuario.cartera,
-                    hora_inicio: usuario.hora_inicio,
-                    hora_fim: usuario.hora_fim,
-                    hora_intervalo_inicio: usuario.hora_intervalo_inicio,
-                    hora_intervalo_fim: usuario.hora_intervalo_fim,
-                    logado: usuario.logado,
-                    tempo_medio_acionamento: usuario.tempo_medio_acionamento,
-                    tempo_logado: usuario.tempo_logado
-                };
-                usuarios.push(usuarioObj);
-            });
-    
-            console.log(usuarios);
+            // Exiba os resultados na tabela, se necessário
             this.criarTabelaUsuarios(usuarios);
-        })
-        .catch(error => {
-            console.error('Erro ao obter dados:', error);
-        });
+        } catch (err) {
+            // Se houver algum erro, exibe-o
+            console.error('Erro ao conectar ou consultar o banco de dados:', err);
+        } finally {
+            // Fecha a conexão se quiser
+        }
     }
+    
+    async editarUsuario(usuario, id) {
+        try {
+            // Conecta ao banco de dados
+            await this.sql.connect(this.config);
+            
+            // Executa a consulta de atualização
+            const result = await this.sql.query`UPDATE usuariosRobo 
+                                                 SET usuario = ${usuario.usuario}, senha = ${usuario.senha}, 
+                                                     cartera = ${usuario.cartera}, hora_inicio = ${usuario.hora_inicio}, 
+                                                     hora_fim = ${usuario.hora_fim}, 
+                                                     hora_intervalo_inicio = ${usuario.hora_intervalo_inicio}, 
+                                                     hora_intervalo_fim = ${usuario.hora_intervalo_fim}, 
+                                                     tempoMedioAcionamento = ${usuario.tempoMedioAcionamento} 
+                                                 WHERE id = ${id}`;
+            
+            console.log('Usuário atualizado com sucesso!');
+            // Você pode adicionar qualquer lógica adicional aqui, como retornar uma mensagem de sucesso ou atualizar a interface do usuário
+    
+        } catch (err) {
+            // Se houver algum erro, exibe-o
+            console.error('Erro ao atualizar usuário:', err);
+        } finally {
+            // Fecha a conexão
+        }
+    }
+    
 
-    criarTabelaUsuarios(value){
+    criarTabelaUsuarios(value) {
         let tbody = document.querySelector("#tabelaUser");
-
+    
         // Limpar o conteúdo atual da tabela
         tbody.innerHTML = "";
     
         value.forEach(user => {
             let tr = document.createElement("tr");
-            
+    
             tr.innerHTML = `
                 <td>${user.id}</td>
                 <td>${user.usuario}</td>
                 <td>${user.senha}</td>
                 <td>${user.cartera}</td>
-                <td>${user.hora_inicio}</td>
-                <td>${user.hora_fim}</td>
-                <td>${user.hora_intervalo_inicio}</td>
-                <td>${user.hora_intervalo_fim}</td>
-                <td>${user.tempo_medio_acionamento}</td>
-                <td>${user.tempo_logado}</td>
+                <td>${this.formatarHora(user.hora_inicio)}</td>
+                <td>${this.formatarHora(user.hora_fim)}</td>
+                <td>${this.formatarHora(user.hora_intervalo_inicio)}</td>
+                <td>${this.formatarHora(user.hora_intervalo_fim)}</td>
+                <td>${this.formatarHora(user.tempoMedioAcionamento)}</td>
+                <td>${this.formatarHora(user.tempo_logado)}</td>
             `;
             
-            
-            tr.addEventListener("click", function() {
-            document.querySelector("#id").value = user.id,
-            document.querySelector("#usuario").value = user.usuario;
-            document.querySelector("#senha").value = user.senha;
-            document.querySelector("#cartera").value = user.cartera;
-            document.querySelector("#hora_inicio").value = user.hora_inicio;
-            document.querySelector("#hora_fim").value = user.hora_fim;
-            document.querySelector("#hora_intervalo_inicio").value = user.hora_intervalo_inicio;
-            document.querySelector("#hora_intervalo_fim").value = user.hora_intervalo_fim;
-            document.querySelector("#tempo_medio_acionamento").value = user.tempo_medio_acionamento;
-            });
+            tr.addEventListener("click",e=>{
+                document.querySelector("#id").value = user.id;
+                document.querySelector("#usuario").value = user.usuario;
+                document.querySelector("#senha").value = user.senha;
+                document.querySelector("#cartera").value = user.cartera;
+                document.querySelector("#hora_inicio").value = this.formatarHora(user.hora_inicio);
+                document.querySelector("#hora_fim").value = this.formatarHora(user.hora_fim);
+                document.querySelector("#hora_intervalo_inicio").value = this.formatarHora(user.hora_intervalo_inicio);
+                document.querySelector("#hora_intervalo_fim").value = this.formatarHora(user.hora_intervalo_fim);
+                document.querySelector("#tempo_medio_acionamento").value = this.formatarHora(user.tempoMedioAcionamento);
+            })
 
             tbody.appendChild(tr);
         });
+    }
+
+    formatarHora(hora) {
+        // Verifica se a hora é válida
+        if (!hora) return '';
+        // Formato: HH:MM:SS
+        return hora.slice(0, 8);
     }
 }
 

@@ -91,26 +91,27 @@ class Botoes {
         robo1.addEventListener("click",e =>{
             document.querySelector("#userSelect").innerHTML = 'jaFalcao';
             this.nome = 'jaFalcao';
-            this.control.listarJafalacao();
-
+            this.control.listarUsuario('Jafalcao');
         });
         robo2.addEventListener("click",e =>{
             document.querySelector("#userSelect").innerHTML = 'Ipmiranda';
-            this.nome = 'Ipmiranda';
-            this.control.listarIpmiranda();
-
+            this.nome = 'lpmiranda';
+            this.control.listarUsuario('lpmiiranda');
         });
         robo3.addEventListener("click",e =>{
             document.querySelector("#userSelect").innerHTML = 'Schsiilva';
             this.nome = 'Schsiilva';
+            this.control.listarUsuario('schsiilva');
         });
         robo4.addEventListener("click",e =>{
-            document.querySelector("#userSelect").innerHTML = 'Impereira';
+            document.querySelector("#userSelect").innerHTML = 'impereiira';
             this.nome = 'Impereira';
+            this.control.listarUsuario('impereiira');
         });
         robo5.addEventListener("click",e =>{
             document.querySelector("#userSelect").innerHTML = 'Dhboorba';
             this.nome = 'Dhboorba';
+            this.control.listarUsuario('dhaboorba');
         });
 
         removeUser.addEventListener("click",e =>{
@@ -136,18 +137,7 @@ class Botoes {
             logado: 'nao',
             tempoMedioAcionamento: document.querySelector("#tempo_medio_acionamento").value,
         }
-        console.log('Editar',dados);
-        const urlApiFlask = 'http://localhost:5000/editar_usuarios';
-        // Envia os dados para a API Flask
-        this.axios.post(urlApiFlask, dados)
-        .then(response => {
-        console.log('Dados enviados com sucesso:', response.data);
-
-        this.control.listarDadosUsuarios();
-        })
-        .catch(error => {
-        console.error('Erro ao enviar dados:', error);
-        });
+       this.control.editarUsuario(dados,dados.id);
 
     }
     obterNovoUsuario(){
