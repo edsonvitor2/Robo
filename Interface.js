@@ -25,6 +25,7 @@ class Botoes {
         let robo3 = document.querySelector("#robo3");
         let robo4 = document.querySelector("#robo4");
         let robo5 = document.querySelector("#robo5");
+        let robo23 = document.querySelector("#robo23");
         let voltarRobos = document.querySelector("#voltarRobos");
 
         // BOTOES INTERFACE //
@@ -112,6 +113,11 @@ class Botoes {
             document.querySelector("#userSelect").innerHTML = 'Dhboorba';
             this.nome = 'Dhboorba';
             this.control.listarUsuario('dhaboorba');
+        });
+        robo23.addEventListener("click",e =>{
+            document.querySelector("#userSelect").innerHTML = 'besrodrigues';
+            this.nome = 'besrodrigues';
+            this.control.listarUsuario('besrodrigues');
         });
 
         removeUser.addEventListener("click",e =>{

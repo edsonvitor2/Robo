@@ -34,7 +34,7 @@ class Robo {
             await page.keyboard.press('Enter'); // Pressiona Enter
 
             // Variáveis para controlar o número de iterações e o horário atual
-            var acionamentos = 80;
+            var acionamentos = 40;
             var contador = 0;
 
             while (contador < acionamentos) { // Loop vai rodar enquanto houver clientes
@@ -79,7 +79,7 @@ class Robo {
 
                         // Loop sobre os clientes
                         for (let i = 0; i < clientes.length; i++) {
-                            if (clientes[i].agencia == usuario.cartera && clientes[i].desc_evento == 'ok') {
+                            if (clientes[i].agencia == usuario.cartera && clientes[i].desc_evento == 'ok' || clientes[i].desc_evento == 'OK') {
 
                                 this.cliente = clientes[i];
                                 console.log('carteira ok', this.cliente);
@@ -136,9 +136,9 @@ class Robo {
                                 } else {
                                     console.log(`O texto "${textoEsperado}" não foi encontrado dentro das tags <b>.`);
 
-                                    this.selecionarMensagem();
-                                    //let mensagem = this.selecionarMensagem();
-                                    let mensagem = 'Telefone indisponível no momento';
+                                    //await this.selecionarMensagem();
+                                    let mensagem = await this.selecionarMensagem();
+                                    //let mensagem = 'Telefone indisponível no momento';
                                     console.log(mensagem);
                                     await page.type('[id="TaskResults"]', `${mensagem}`);
                                     if(mensagem == 'Telefone indisponível no momento'){
@@ -154,7 +154,7 @@ class Robo {
                                     console.log('ID do cliente a ser atualizado:', clienteAtualizar.operacao);
 
                                     // Atualiza a obs_evento do cliente para fora da base no banco de dados
-                                    const atualizarClienteQuery = `UPDATE baseRobo SET desc_evento = 'fora da base' WHERE operacao = ${clienteAtualizar.operacao}`;
+                                    const atualizarClienteQuery = `UPDATE baseRobo SET desc_evento = 'Acionado' WHERE operacao = ${clienteAtualizar.operacao}`;
                                     await this.sql.query(atualizarClienteQuery);
                                     await new Promise(resolve => setTimeout(resolve, 180000));
                                     }
@@ -173,6 +173,7 @@ class Robo {
                     break; // Sai do loop se estiver fora do horário de serviço
                 }
             }
+            alert('Limite de acionamentos atingido');
         } catch (erro) {
             console.error('Ocorreu um erro:', erro);
         }
@@ -184,7 +185,7 @@ class Robo {
     }
 
     // Função para selecionar aleatoriamente uma mensagem com base nas porcentagens
-    selecionarMensagem() {
+    async selecionarMensagem() {
         // Array com as mensagens disponíveis
         const mensagensGrupo1 = [
             'Telefone ocupado',
