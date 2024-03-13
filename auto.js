@@ -141,7 +141,16 @@ class Robo {
                                     //let mensagem = 'Telefone indisponível no momento';
                                     console.log(mensagem);
                                     await page.type('[id="TaskResults"]', `${mensagem}`);
-                                    if(mensagem == 'Telefone indisponível no momento'){
+                                    if( mensagem == 'Telefone indisponível no momento' || 
+                                        mensagem == 'Telefone ocupado' ||
+                                        mensagem == 'Telefone não atende' ||
+                                        mensagem == 'Contato desligou' ||
+                                        mensagem == 'Desconhece o cliente' ||
+                                        mensagem == 'Ligação muda' ||
+                                        mensagem == 'Ligação muda' ||
+                                        mensagem == 'Ligação interrompida/ruim' ||
+                                        mensagem == 'Recado')
+                                        {
                                         console.log('Pressionou Enter. Aguardando 5 segundos...');
                                         await new Promise(resolve => setTimeout(resolve, 5000));
                                         await page.keyboard.press('ArrowDown');
