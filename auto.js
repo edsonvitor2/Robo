@@ -187,6 +187,7 @@ class Robo {
             alert('Limite de acionamentos atingido');
         } catch (erro) {
             console.error('Ocorreu um erro:', erro);
+            await browser.close();
             let user = usuario;
             console.log('continuando loop');
             this.iniciarRobo(user);
