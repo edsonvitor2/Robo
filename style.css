@@ -64,6 +64,7 @@ li.li-robo{
     height: 30px;
     border-radius: 15px;
     box-shadow: 1px 1px 2px 2px;
+    float: left;
 }
 
 li.li-funcoes{
@@ -72,6 +73,7 @@ li.li-funcoes{
     height: 30px;
     border-radius: 15px;
     box-shadow: 1px 1px 2px 2px;
+    margin: 10px;
 }
 li.li-funcoes button{
     width: 100%;
@@ -90,9 +92,13 @@ ul{
     float: left;
     list-style: none;
 }
+ul#robos{
+    width: 50%;
+}
 ul#funcoes{
     float: right;
     margin-top: 20px;
+    margin-right: 20px;
 }
 #removeUser{
     position: relative;
