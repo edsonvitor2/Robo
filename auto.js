@@ -148,8 +148,8 @@ class Robo {
                                         mensagem == 'Desconhece o cliente' ||
                                         mensagem == 'Ligação muda' ||
                                         mensagem == 'Ligação muda' ||
-                                        mensagem == 'Ligação interrompida/ruim' ||
-                                        mensagem == 'Recado')
+                                        mensagem == 'Ligação interrompida/ruim' |
+                                        mensagem == 'Ligação muda')
                                         {
                                         console.log('Pressionou Enter. Aguardando 5 segundos...');
                                         await new Promise(resolve => setTimeout(resolve, 5000));
@@ -164,7 +164,9 @@ class Robo {
 
                                     // Atualiza a obs_evento do cliente para fora da base no banco de dados
                                     const atualizarClienteQuery = `UPDATE baseRobo SET desc_evento = 'Acionado' WHERE operacao = ${clienteAtualizar.operacao}`;
+                                    const atualizarClienteQuery2 = `UPDATE baseRobo SET obs_evento = '${mensagem}' WHERE operacao = ${clienteAtualizar.operacao}`;
                                     await this.sql.query(atualizarClienteQuery);
+                                    await this.sql.query(atualizarClienteQuery2);
                                     await new Promise(resolve => setTimeout(resolve, 180000));
                                     }
                                 }
@@ -185,6 +187,9 @@ class Robo {
             alert('Limite de acionamentos atingido');
         } catch (erro) {
             console.error('Ocorreu um erro:', erro);
+            let user = usuario;
+            console.log('continuando loop');
+            this.iniciarRobo(user);
         }
     }
     
