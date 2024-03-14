@@ -24,7 +24,32 @@ class Botoes {
         let robo3 = document.querySelector("#robo3");
         let robo4 = document.querySelector("#robo4");
         let robo5 = document.querySelector("#robo5");
+        let robo6 = document.querySelector("#robo6");
+        let robo7 = document.querySelector("#robo7");
+        let robo8 = document.querySelector("#robo8");
+        let robo9 = document.querySelector("#robo9");
+        let robo10 = document.querySelector("#robo10");
+        let robo11 = document.querySelector("#robo11");
+        let robo12 = document.querySelector("#robo12");
+        let robo13 = document.querySelector("#robo13");
+        let robo14 = document.querySelector("#robo14");
+        let robo15 = document.querySelector("#robo15");
+        let robo16 = document.querySelector("#robo16");
+        let robo17 = document.querySelector("#robo17");
+        let robo18 = document.querySelector("#robo18");
+        let robo19 = document.querySelector("#robo19");
+        let robo20 = document.querySelector("#robo20");
+        let robo21 = document.querySelector("#robo21");
+        let robo22 = document.querySelector("#robo22");
         let robo23 = document.querySelector("#robo23");
+        let robo24 = document.querySelector("#robo24");
+        let robo25 = document.querySelector("#robo25");
+        let robo26 = document.querySelector("#robo26");
+        let robo27 = document.querySelector("#robo27");
+        let robo28 = document.querySelector("#robo28");
+        let robo29 = document.querySelector("#robo29");
+        let robo30 = document.querySelector("#robo30");
+        
         let voltarRobos = document.querySelector("#voltarRobos");
 
         // BOTOES INTERFACE //
@@ -139,7 +164,6 @@ class Botoes {
             document.querySelector("#userSelect").innerHTML = 'daaroliveira';
             this.control.listarUsuario('daaroliveira');
         });
-        v
         robo14.addEventListener("click",e =>{
             document.querySelector("#userSelect").innerHTML = 'cdssanche';
             this.control.listarUsuario('cdssanche');
@@ -161,19 +185,19 @@ class Botoes {
             this.control.listarUsuario('desdsilva');
         });
         robo19.addEventListener("click",e =>{
-            document.querySelector("#userSelect").innerHTML = 'Dhboorba';
+            document.querySelector("#userSelect").innerHTML = 'frlfernandes';
             this.control.listarUsuario('frlfernandes');
         });
         robo20.addEventListener("click",e =>{
-            document.querySelector("#userSelect").innerHTML = 'Dhboorba';
+            document.querySelector("#userSelect").innerHTML = 'wdsilva';
             this.control.listarUsuario('wdsilva');
         });
         robo21.addEventListener("click",e =>{
-            document.querySelector("#userSelect").innerHTML = 'Dhboorba';
+            document.querySelector("#userSelect").innerHTML = 'bjlacerda';
             this.control.listarUsuario('bjlacerda');
         });
         robo22.addEventListener("click",e =>{
-            document.querySelector("#userSelect").innerHTML = 'Dhboorba';
+            document.querySelector("#userSelect").innerHTML = 'lcsilvaa';
             this.control.listarUsuario('lcsilvaa');
         });
         robo23.addEventListener("click",e =>{
@@ -181,32 +205,32 @@ class Botoes {
             this.control.listarUsuario('besrodrigues');
         });
         robo24.addEventListener("click",e =>{
-            document.querySelector("#userSelect").innerHTML = 'cxjsantoos';
+            document.querySelector("#userSelect").innerHTML = 'rrvciprianoo';
             this.control.listarUsuario('rrvciprianoo');
         });
         robo25.addEventListener("click",e =>{
-            document.querySelector("#userSelect").innerHTML = 'desdsilva';
+            document.querySelector("#userSelect").innerHTML = 'ycaraujo';
             this.control.listarUsuario('ycaraujo');
         });
         robo26.addEventListener("click",e =>{
-            document.querySelector("#userSelect").innerHTML = 'Dhboorba';
-            this.control.listarUsuario('frlfernandes');
+            document.querySelector("#userSelect").innerHTML = 'rwneto';
+            this.control.listarUsuario('rwneto');
         });
         robo27.addEventListener("click",e =>{
-            document.querySelector("#userSelect").innerHTML = 'Dhboorba';
-            this.control.listarUsuario('wdsilva');
+            document.querySelector("#userSelect").innerHTML = 'guuasilva';
+            this.control.listarUsuario('guuasilva');
         });
         robo28.addEventListener("click",e =>{
-            document.querySelector("#userSelect").innerHTML = 'Dhboorba';
-            this.control.listarUsuario('bjlacerda');
+            document.querySelector("#userSelect").innerHTML = 'jcfdcarvalho';
+            this.control.listarUsuario('jcfdcarvalho');
         });
         robo29.addEventListener("click",e =>{
-            document.querySelector("#userSelect").innerHTML = 'Dhboorba';
-            this.control.listarUsuario('wdsilva');
+            document.querySelector("#userSelect").innerHTML = 'kgfrodrigues';
+            this.control.listarUsuario('kgfrodrigues');
         });
         robo30.addEventListener("click",e =>{
-            document.querySelector("#userSelect").innerHTML = 'Dhboorba';
-            this.control.listarUsuario('bjlacerda');
+            document.querySelector("#userSelect").innerHTML = 'capsilveira';
+            this.control.listarUsuario('capsilveira');
         });
        
 

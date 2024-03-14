@@ -79,7 +79,7 @@ class Robo {
 
                         // Loop sobre os clientes
                         for (let i = 0; i < clientes.length; i++) {
-                            if (clientes[i].agencia == usuario.cartera && clientes[i].desc_evento == 'ok' || clientes[i].desc_evento == 'OK') {
+                            if (clientes[i].agencia == usuario.cartera && clientes[i].desc_evento == 'OK') {
 
                                 this.cliente = clientes[i];
                                 console.log('carteira ok', this.cliente);

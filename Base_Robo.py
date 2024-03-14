@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import filedialog, ttk
 import pandas as pd
 import pyodbc
-import threading
 
 def selecionar_planilha():
     caminho_planilha = filedialog.askopenfilename(filetypes=[("Arquivos Excel", ".xlsx"), ("Todos os arquivos", ".*")])
@@ -32,9 +31,6 @@ def carregar_planilha(caminho_planilha):
 
         # Criar um cursor para executar comandos SQL
         cursor = connection.cursor()
-
-        # Apagar os dados existentes da tabela
-        cursor.execute("DELETE FROM baseRobo")
 
         total_linhas = len(df)
         linhas_processadas = 0
