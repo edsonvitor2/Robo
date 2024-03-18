@@ -3,6 +3,7 @@ class Robo {
         // Instancia o Puppeteer e o MSSQL
         this.puppeteer = require('puppeteer'); // instancia puppeteer
         this.sql = require('mssql');
+        this.browser;
 
         // Configurações de conexão com o banco de dados
         this.config={
@@ -21,9 +22,14 @@ class Robo {
 
     async iniciarRobo(usuario) {
         try {
+
+            const atualizarUser = `UPDATE usuariosRobo SET logado = 'Logado' WHERE usuario = ${usuario.usuario}`;
+            this.sql.query(atualizarUser);
+
             // Inicia o navegador Puppeteer
             const browser = await this.puppeteer.launch({ headless: false }); // Instancia o navegador 
             const page = await browser.newPage(); // Abre uma nova página
+            this.browser = browser;
             await page.goto('https://alpheratz.itapevarec.com.br/Alpheratz/login.aspx'); // Abre o site 
 
             // Espera o site carregar o campo de login
@@ -187,7 +193,7 @@ class Robo {
             alert('Limite de acionamentos atingido');
         } catch (erro) {
             console.error('Ocorreu um erro:', erro);
-            await browser.close();
+            await this.browser.close();
             let user = usuario;
             console.log('continuando loop');
             this.iniciarRobo(user);
@@ -197,6 +203,19 @@ class Robo {
     // Função de atraso
     async delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async fecharNavegador() {
+        try {
+            if (this.browser) {
+                await this.browser.close();
+                console.log("Navegador fechado com sucesso!");
+            } else {
+                console.log("Nenhum navegador foi aberto.");
+            }
+        } catch (erro) {
+            console.error('Ocorreu um erro ao fechar o navegador:', erro);
+        }
     }
 
     // Função para selecionar aleatoriamente uma mensagem com base nas porcentagens
