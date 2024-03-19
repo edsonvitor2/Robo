@@ -153,10 +153,10 @@ class Robo {
                                         mensagem == 'Telefone não atende' ||
                                         mensagem == 'Contato desligou' ||
                                         mensagem == 'Desconhece o cliente' ||
-                                        mensagem == 'Ligação muda' ||
-                                        mensagem == 'Ligação muda' ||
-                                        mensagem == 'Ligação interrompida/ruim' |
-                                        mensagem == 'Ligação muda')
+                                        mensagem == 'Recado' ||
+                                        mensagem == 'Ligação interrompida/ruim' ||
+                                        mensagem == 'Ligação muda'||
+                                        mensagem == 'Solicita contato outro dia/hora')
                                         {
                                         console.log('Pressionou Enter. Aguardando 5 segundos...');
                                         await new Promise(resolve => setTimeout(resolve, 5000));
