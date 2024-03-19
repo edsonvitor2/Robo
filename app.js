@@ -32,8 +32,6 @@ class Controller {
                 // Itera sobre os resultados e verifica o status de logado de cada usuário
                 for (const user of result.recordset) {
                     let logado = user.logado;
-                    console.log(user.status);
-                    console.log(`Usuário ${user.usuario} está logado: ${user.logado}`);
                     if(logado == 'sim'){
                         document.querySelector(`${'.'+user.usuario}`).style.color = "green";
                         document.querySelector(`${'.'+user.usuario}`).innerHTML = "LIGADO!";

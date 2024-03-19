@@ -50,13 +50,13 @@ class Botoes {
         let robo24 = document.querySelector("#robo24");
         let robo25 = document.querySelector("#robo25");
         let robo26 = document.querySelector("#robo26");
-        let robo27 = document.querySelector("#robo27");
-        let robo28 = document.querySelector("#robo28");
+        let robo27 = document.querySelector("#robo28");
+        let robo28 = document.querySelector("#robo27");
         let robo29 = document.querySelector("#robo29");
         let robo30 = document.querySelector("#robo30");
         
         let voltarRobos = document.querySelector("#voltarRobos");
-
+        //42539625
         // BOTOES INTERFACE //
 
         novoUsuario.addEventListener("click", e => {
