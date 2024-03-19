@@ -4,6 +4,7 @@ class Robo {
         this.puppeteer = require('puppeteer'); // instancia puppeteer
         this.sql = require('mssql');
         this.browser;
+        this.desligar;
 
         // Configurações de conexão com o banco de dados
         this.config={
@@ -22,10 +23,7 @@ class Robo {
 
     async iniciarRobo(usuario) {
         try {
-
-            const atualizarUser = `UPDATE usuariosRobo SET logado = 'Logado' WHERE usuario = ${usuario.usuario}`;
-            this.sql.query(atualizarUser);
-
+            this.desligar = false;
             // Inicia o navegador Puppeteer
             const browser = await this.puppeteer.launch({ headless: false }); // Instancia o navegador 
             const page = await browser.newPage(); // Abre uma nova página
@@ -86,6 +84,9 @@ class Robo {
                         // Loop sobre os clientes
                         for (let i = 0; i < clientes.length; i++) {
                             if (clientes[i].agencia == usuario.cartera && clientes[i].desc_evento == 'OK') {
+
+                                const atualizarUsuarioQuery = `UPDATE usuariosRobo SET logado = 'sim' WHERE usuario = '${usuario.usuario}'`;
+                                await this.sql.query(atualizarUsuarioQuery);
 
                                 this.cliente = clientes[i];
                                 console.log('carteira ok', this.cliente);
@@ -195,8 +196,13 @@ class Robo {
             console.error('Ocorreu um erro:', erro);
             await this.browser.close();
             let user = usuario;
-            console.log('continuando loop');
-            this.iniciarRobo(user);
+            if(this.desligar == true){
+                console.log('Robo desligado')
+            }else {
+                console.log('continuando loop');
+                this.iniciarRobo(user);
+            }
+            
         }
     }
     
@@ -205,11 +211,19 @@ class Robo {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    async fecharNavegador() {
+    async fecharNavegador(usuario) {
         try {
+            // Verifica se há um navegador aberto
             if (this.browser) {
+                // Fecha o navegador
+                this.desligar = true;
                 await this.browser.close();
                 console.log("Navegador fechado com sucesso!");
+    
+                // Atualiza o status de login do usuário para 'não' no banco de dados
+                const atualizarUsuarioQuery = `UPDATE usuariosRobo SET logado = 'não' WHERE usuario = '${usuario}'`;
+                await this.sql.query(atualizarUsuarioQuery);
+                console.log("Status de login do usuário atualizado para 'não' no banco de dados.");
             } else {
                 console.log("Nenhum navegador foi aberto.");
             }
@@ -217,6 +231,7 @@ class Robo {
             console.error('Ocorreu um erro ao fechar o navegador:', erro);
         }
     }
+    
 
     // Função para selecionar aleatoriamente uma mensagem com base nas porcentagens
     async selecionarMensagem() {
