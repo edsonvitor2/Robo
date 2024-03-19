@@ -5,6 +5,7 @@ class Robo {
         this.sql = require('mssql');
         this.browser;
         this.desligar;
+        this.navegadores = []; 
 
         // Configurações de conexão com o banco de dados
         this.config={
@@ -28,6 +29,9 @@ class Robo {
             const browser = await this.puppeteer.launch({ headless: false }); // Instancia o navegador 
             const page = await browser.newPage(); // Abre uma nova página
             this.browser = browser;
+            let use = usuario.usuario;
+            this.navegadores.push({ browser, use });
+            console.log(this.navegadores);
             await page.goto('https://alpheratz.itapevarec.com.br/Alpheratz/login.aspx'); // Abre o site 
 
             // Espera o site carregar o campo de login
